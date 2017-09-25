@@ -1,0 +1,120 @@
+create-react-app react-redux-counter
+cd react-redux-counter
+yarn add redux react-redux
+open redux-mastering folder on visual studio code
+add reducers folder, actions folder and store.js file to src folder
+
+
+--------------src/actions/index.js-------------------
+export const increment = () => {
+    return {
+        type: 'INCREMENT'
+    };
+};
+
+export const decrement = () => {
+    return {
+        type: 'DECREMENT'
+    };
+};
+
+----------------------src/components/Counter.js-------------------------------------
+
+import React from 'react';
+import { connect } from 'react-redux';
+import { increment, decrement } from '../actions';
+
+class Counter extends React.Component {
+    render() {
+        console.log("this.props", this.props);
+        return (
+            <div>
+                {this.props.state}
+                <div>
+                    <button onClick={this.props.increment}>+</button>
+                    <button onClick={this.props.decrement}>-</button>
+                </div>
+            </div>
+        )
+    }
+}
+
+const mapStateToProps = (state) => {
+    return { state };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        decrement: () => {
+            dispatch(decrement());
+        },
+        increment: () => {
+            dispatch(increment());
+        }
+    }
+};
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Counter);
+
+----------------------------src/reducers/index.js--------------------------------------------
+
+function counter(state = 0, action) {
+    switch (action.type) {
+        case 'INCREMENT':
+            return state + 1;
+        case 'DECREMENT':
+            return state - 1;
+        default:
+            return state;
+    }
+}
+
+export default counter;
+
+--------------------------src/App.js-------------------------------------
+import React, { Component } from 'react';
+import './App.css';
+import Counter from './components/Counter';
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <Counter />
+      </div>
+    );
+  }
+}
+
+export default App;
+
+-----------------------src/index.js---------------------------------
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
+import { Provider } from 'react-redux';
+import store from './store';
+
+ReactDOM.render(
+    <Provider store={store}>
+        <App />
+    </Provider>
+    , document.getElementById('root'));
+registerServiceWorker();
+
+
+
+---------------------------src/store.js------------------------------------------
+import { createStore } from 'redux';
+import counter from './reducers';
+
+const store = createStore(counter, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+export default store;
+
+---------------------------------------------------------------------
+yarn start
+
